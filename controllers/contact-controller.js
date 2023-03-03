@@ -27,6 +27,10 @@ const createContact = asyncHandler(async (req, res) => {
     res.status(201).json(contacts);
 });
 
+
+// TODO fix error handler
+
+
 //@desc delete Contact
 //@route DELETE /api/contacts:id
 //@access public
@@ -36,15 +40,25 @@ const deleteContact = asyncHandler(async (req, res)=> {
         res.status(400);
         throw new Error("Contact does not exist!")
     }
-    Contact.findByIdAndDelete(req.params.id)
+    await Contact.findByIdAndDelete(req.params.id)
     res.status(200).json(contact)
 });
+
+
+
+//TODO fix update
 
 //@desc Update Contact
 //@route PUT /api/contacts:id
 //@access public
 const updateContact = asyncHandler(async (req,res) => {
-    res.status(200).json({message: `Update contact with ${req.params.id}`})
+    const contact = await Contact.findById(req.params.id);
+    if(!contact){
+        res.status(400);
+        throw new Error("Contact does not exist!")
+    }
+    const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    res.status(200).json(updatedContact)
 });
 
 //@desc Get Single Contact
