@@ -1,24 +1,13 @@
 const express =  require('express')
+const {registerUser, loginUser, currentUser} = require("../controllers/user-controller");
 const router =  express.Router()
+const validateToken = require('../middleware/validate-token-handler')
 
+router.route('/register').post(registerUser)
 
-router.route('/register').post((req, res) => {
-    res.json({
-        message: "Register the user"
-    })
-})
+router.post('/login',loginUser)
 
-router.post('/login', (req, res) => {
-res.json({
-    message: "Login the user",
-})
-})
-
-router.route('/current').post((req, res) => {
- res.json({
-     message: "Current User"
- })
-})
+router.route('/current').get( validateToken, currentUser )
 
 
 
